@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Information</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #weather-info {
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="weather-info">
+        <h2>Weather Information</h2>
+        <p id="temperature"></p>
+        <p id="feels-like"></p>
+        <p id="description"></p>
+    </div>
+
+    <script>
+        function getWeather(cityName) {
+            fetch(`http://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=e6c7ddc5b07bd19ea56b29df9c485f45&units=metric`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('temperature').innerText = `Temperature: ${data.main.temp} °C`;
+                document.getElementById('feels-like').innerText = `Feels Like: ${data.main.feels_like} °C`;
+                document.getElementById('description').innerText = `Description: ${data.weather[0].description}`;
+            })
+            .catch(error => console.log('Error fetching weather data:', error));
+        }
+
+        window.onload = function() {
+            var cityName = prompt("Enter city name:");
+            getWeather(cityName);
+        };
+    </script>
+</body>
+</html>
