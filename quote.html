@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quotes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+          
+        }
+        #fetch-quote-button{
+            margin-bottom: 20px;
+        }
+        #search-bar {
+            argin-bottom: 10px;
+
+        }
+        #search-botton {
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px 30px;
+            background-color: #952525;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="random-quote">
+        <h2>Random Quote</h2>
+        <div id="quote">
+            <p id="quote-text">Press button to fetch random quote.</p>
+        </div>
+        <button onclick="fetchRandomQuote()">Fetch Random Quote</button>
+    </div>
+    
+    <div id="search-quote">
+        <input type="text" id="search-input" placeholder="Enter keyword">
+        <button onclick="searchQuotes()">Search Quotes</button>
+    </div>
+
+    <div id="search-results">
+        <div id="quote-text"></div>
+    </div>
+
+    <script>
+        function fetchRandomQuote() {
+            fetch("https://api.api-ninjas.com/v1/quotes", {
+                headers: {
+                    'X-Api-Key': '8i940f+pj/VqSqIuinVQJA==W282nNYyguxB6M8W'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const randomIndex = Math.floor(Math.random() * data.length);
+                const randomQuote = data[randomIndex]['quote'];
+                document.getElementById('quote-text').innerText = randomQuote;
+            })
+            .catch(error => console.log('Error fetching quote:', error));
+        }
+
+        function searchQuotes() {
+            const keyword = document.getElementById('search-input').value;
+            if (keyword.trim() === '') {
+                alert('Please enter a keyword to search for quotes.');
+                return;
+            }
+            
+            fetch(`https://api.api-ninjas.com/v1/quotes?keyword=${keyword}`, {
+                headers: {
+                    'X-Api-Key': '8i940f+pj/VqSqIuinVQJA==W282nNYyguxB6M8W'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const quoteContainer = document.getElementById('quote-text');
+                if (data.length === 0) {
+                    quoteContainer.innerText = 'No quotes found for the given keyword.';
+                } else {
+                    let quotes = '';
+                    data.forEach(quote => {
+                        quotes += `${quote.quote}\n`;
+                    });
+                    quoteContainer.innerText = quotes;
+                }
+            })
+            .catch(error => console.log('Error searching quotes:', error));
+        }
+    </script>
+</body>
+</html>
